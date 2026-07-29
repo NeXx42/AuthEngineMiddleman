@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AuthEngineMiddleman/AuthEngineMiddleman.csproj" />
+  <Project Path="AuthEngineShared/AuthEngineShared.csproj" />
+</Solution>
