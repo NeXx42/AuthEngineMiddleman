@@ -18,21 +18,45 @@ public class AuthEngineMiddlemanService
 
     public async Task<string> Authenticate(string email, string password)
     {
-        return (await SendRequestToAuthService<string>(HttpMethod.Post, "api/auth/register", new
+        try
         {
-            email,
-            password
-        }))!;
+            string? token = await SendRequestToAuthService<string>(HttpMethod.Post, "api/auth", new
+            {
+                email,
+                password
+            });
+
+            if (string.IsNullOrEmpty(token))
+                throw new Exception("Invalid token returned");
+
+            return token;
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public async Task<string> Register(string email, string displayName, string password)
     {
-        return (await SendRequestToAuthService<string>(HttpMethod.Post, "api/auth", new
+        try
         {
-            email,
-            displayName,
-            password
-        }))!;
+            string? token = await SendRequestToAuthService<string>(HttpMethod.Post, "api/auth/register", new
+            {
+                email,
+                displayName,
+                password
+            });
+
+            if (string.IsNullOrEmpty(token))
+                throw new Exception("Invalid token returned");
+
+            return token;
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public async Task<UserObject?> DecodePrincipal(ClaimsPrincipal user)
@@ -68,17 +92,24 @@ public class AuthEngineMiddlemanService
 
     private async Task<T?> SendRequestToAuthService<T>(HttpMethod method, string path, object json)
     {
-        using (HttpClient client = new HttpClient())
+        try
         {
-            HttpRequestMessage msg = new HttpRequestMessage(method, Path.Combine(_authServiceUrl, path));
-            msg.Headers.Add(AuthEngineConsts.AUTHENGINE_HEADERAUTH, _authServiceToken);
-            msg.Content = new StringContent(JsonSerializer.Serialize(json), Encoding.UTF8, "application/json");
+            using (HttpClient client = new HttpClient())
+            {
+                HttpRequestMessage msg = new HttpRequestMessage(method, Path.Combine(_authServiceUrl, path));
+                msg.Headers.Add(AuthEngineConsts.AUTHENGINE_HEADERAUTH, _authServiceToken);
+                msg.Content = new StringContent(JsonSerializer.Serialize(json), Encoding.UTF8, "application/json");
 
-            HttpResponseMessage res = await client.SendAsync(msg);
-            res.EnsureSuccessStatusCode();
+                HttpResponseMessage res = await client.SendAsync(msg);
+                res.EnsureSuccessStatusCode();
 
-            string resText = await res.Content!.ReadAsStringAsync(); ;
-            return JsonSerializer.Deserialize<T>(resText);
+                string resText = await res.Content!.ReadAsStringAsync(); ;
+                return JsonSerializer.Deserialize<T>(resText);
+            }
+        }
+        catch
+        {
+            throw;
         }
     }
 }
