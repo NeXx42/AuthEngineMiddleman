@@ -20,7 +20,7 @@ public class AuthEngineMiddlemanService
     {
         try
         {
-            string? token = await SendRequestToAuthService<string>(HttpMethod.Post, "api/auth", new
+            string? token = await SendRequestToAuthService<string>(HttpMethod.Post, "auth", new
             {
                 email,
                 password
@@ -41,7 +41,7 @@ public class AuthEngineMiddlemanService
     {
         try
         {
-            string? token = await SendRequestToAuthService<string>(HttpMethod.Post, "api/auth/register", new
+            string? token = await SendRequestToAuthService<string>(HttpMethod.Post, "auth/register", new
             {
                 email,
                 displayName,
@@ -52,6 +52,23 @@ public class AuthEngineMiddlemanService
                 throw new Exception("Invalid token returned");
 
             return token;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public async Task<UserObject[]> GetUsers()
+    {
+        try
+        {
+            UserObject[]? usrs = await SendRequestToAuthService<UserObject[]>(HttpMethod.Post, "admin/users", null);
+
+            if (usrs == null)
+                return [];
+
+            return usrs;
         }
         catch
         {
@@ -90,15 +107,17 @@ public class AuthEngineMiddlemanService
         return null;
     }
 
-    public async Task<T?> SendRequestToAuthService<T>(HttpMethod method, string path, object json)
+    public async Task<T?> SendRequestToAuthService<T>(HttpMethod method, string path, object? json)
     {
         try
         {
             using (HttpClient client = new HttpClient())
             {
-                HttpRequestMessage msg = new HttpRequestMessage(method, Path.Combine(_authServiceUrl, path));
+                HttpRequestMessage msg = new HttpRequestMessage(method, Path.Combine(_authServiceUrl, "api", path));
                 msg.Headers.Add(AuthEngineConsts.AUTHENGINE_HEADERAUTH, _authServiceToken);
-                msg.Content = new StringContent(JsonSerializer.Serialize(json), Encoding.UTF8, "application/json");
+
+                if (json == null)
+                    msg.Content = new StringContent(JsonSerializer.Serialize(json), Encoding.UTF8, "application/json");
 
                 HttpResponseMessage res = await client.SendAsync(msg);
                 res.EnsureSuccessStatusCode();
