@@ -122,8 +122,11 @@ public class AuthEngineMiddlemanService
                 HttpResponseMessage res = await client.SendAsync(msg);
                 res.EnsureSuccessStatusCode();
 
-                string resText = await res.Content!.ReadAsStringAsync(); ;
-                return JsonSerializer.Deserialize<T>(resText);
+                string resText = await res.Content!.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<T>(resText, new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
             }
         }
         catch
