@@ -16,7 +16,7 @@ public class AuthEngineMiddlemanService
         _authServiceToken = authServiceToken;
     }
 
-    public async Task<string> Authenticate(string email, string password)
+    public async Task<string?> Authenticate(string email, string password)
     {
         try
         {
@@ -26,9 +26,6 @@ public class AuthEngineMiddlemanService
                 password
             });
 
-            if (string.IsNullOrEmpty(token))
-                throw new Exception("Invalid token returned");
-
             return token;
         }
         catch
@@ -37,7 +34,7 @@ public class AuthEngineMiddlemanService
         }
     }
 
-    public async Task<string> Register(string email, string displayName, string password)
+    public async Task<string?> Register(string email, string displayName, string password)
     {
         try
         {
@@ -47,9 +44,6 @@ public class AuthEngineMiddlemanService
                 displayName,
                 password
             });
-
-            if (string.IsNullOrEmpty(token))
-                throw new Exception("Invalid token returned");
 
             return token;
         }
@@ -116,7 +110,7 @@ public class AuthEngineMiddlemanService
                 HttpRequestMessage msg = new HttpRequestMessage(method, Path.Combine(_authServiceUrl, "api", path));
                 msg.Headers.Add(AuthEngineConsts.AUTHENGINE_HEADERAUTH, _authServiceToken);
 
-                if (json == null)
+                if (json != null)
                     msg.Content = new StringContent(JsonSerializer.Serialize(json), Encoding.UTF8, "application/json");
 
                 HttpResponseMessage res = await client.SendAsync(msg);

@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="AuthEngineMiddleman.Test/AuthEngineMiddleman.Test.csproj" />
   <Project Path="AuthEngineMiddleman/AuthEngineMiddleman.csproj" />
 </Solution>
