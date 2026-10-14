@@ -63,7 +63,7 @@ public class AuthEngineMiddlemanService
     {
         try
         {
-            UserObject[]? usrs = await SendRequestToAuthService<UserObject[]>(HttpMethod.Post, "admin/users", null);
+            UserObject[]? usrs = await SendRequestToAuthService<UserObject[]>(HttpMethod.Get, "admin/users", null);
 
             if (usrs == null)
                 return [];
