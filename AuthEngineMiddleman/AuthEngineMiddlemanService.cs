@@ -90,7 +90,7 @@ public class AuthEngineMiddlemanService
         return null;
     }
 
-    private async Task<T?> SendRequestToAuthService<T>(HttpMethod method, string path, object json)
+    public async Task<T?> SendRequestToAuthService<T>(HttpMethod method, string path, object json)
     {
         try
         {
