@@ -8,9 +8,9 @@ namespace AuthEngineMiddleman;
 public class AuthEngineMiddlemanService
 {
     private readonly string _authServiceUrl;
-    private readonly string _authServiceToken;
+    private readonly string? _authServiceToken;
 
-    public AuthEngineMiddlemanService(string authServiceUrl, string authServiceToken)
+    public AuthEngineMiddlemanService(string authServiceUrl, string? authServiceToken = null)
     {
         _authServiceUrl = authServiceUrl;
         _authServiceToken = authServiceToken;
@@ -70,6 +70,11 @@ public class AuthEngineMiddlemanService
         }
     }
 
+    public async Task<string> GetPublicKey()
+    {
+        return (await SendRequestToAuthService<string>(HttpMethod.Get, "auth/publickey", null))!;
+    }
+
     public async Task<UserObject?> DecodePrincipal(ClaimsPrincipal user)
     {
         string? userGuid = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -108,7 +113,9 @@ public class AuthEngineMiddlemanService
             using (HttpClient client = new HttpClient())
             {
                 HttpRequestMessage msg = new HttpRequestMessage(method, Path.Combine(_authServiceUrl, "api", path));
-                msg.Headers.Add(AuthEngineConsts.AUTHENGINE_HEADERAUTH, _authServiceToken);
+
+                if (!string.IsNullOrEmpty(_authServiceToken))
+                    msg.Headers.Add(AuthEngineConsts.AUTHENGINE_HEADERAUTH, _authServiceToken);
 
                 if (json != null)
                     msg.Content = new StringContent(JsonSerializer.Serialize(json), Encoding.UTF8, "application/json");
