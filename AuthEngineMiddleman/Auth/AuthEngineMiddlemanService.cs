@@ -70,9 +70,14 @@ public class AuthEngineMiddlemanService
         }
     }
 
+    public struct PublicKeyContainer
+    {
+        public string Key { get; set; }
+    }
+
     public async Task<string> GetPublicKey()
     {
-        return (await SendRequestToAuthService<string>(HttpMethod.Get, "auth/publickey", null))!;
+        return (await SendRequestToAuthService<PublicKeyContainer>(HttpMethod.Get, "auth/publickey", null))!.Key;
     }
 
     public async Task<UserObject?> DecodePrincipal(ClaimsPrincipal user)

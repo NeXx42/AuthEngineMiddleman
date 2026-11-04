@@ -26,4 +26,12 @@ public class Tests
 
         Is.Not.Null.Equals(testUsr);
     }
+
+    [Test]
+    public async Task Test_GetPublicKey()
+    {
+        string pub = await _service.GetPublicKey();
+
+        Is.Not.True.Equals(string.IsNullOrEmpty(pub));
+    }
 }
