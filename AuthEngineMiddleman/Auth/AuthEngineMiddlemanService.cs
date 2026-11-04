@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using AuthEngineShared;
 
-namespace AuthEngineMiddleman;
+namespace AuthEngineMiddleman.Auth;
 
 public class AuthEngineMiddlemanService
 {

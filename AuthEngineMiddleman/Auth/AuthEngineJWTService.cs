@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthEngineMiddleman;
+namespace AuthEngineMiddleman.Auth;
 
 public class AuthEngineSigningService(string _authServiceUrl, string? _publicKey = null) : IDisposable
 {

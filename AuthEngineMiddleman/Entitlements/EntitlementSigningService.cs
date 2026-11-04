@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace AuthEngineMiddleman.Helpers;
+namespace AuthEngineMiddleman.Entitlements;
 
-public static class AuthEngineSignatureHelper
+public static class EntitlementSigningService
 {
     public static byte[] Sign<T>(T obj, string privateKey)
     {

@@ -1,4 +1,6 @@
-﻿namespace AuthEngineMiddleman.Test;
+﻿using AuthEngineMiddleman.Auth;
+
+namespace AuthEngineMiddleman.Test;
 
 public class Tests
 {

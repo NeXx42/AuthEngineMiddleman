@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text.Json;
-using AuthEngineMiddleman.Helpers;
+using AuthEngineMiddleman.Entitlements;
 
 namespace AuthEngineMiddleman.Test;
 
@@ -29,7 +29,7 @@ public class Test_Signatures
         string privateKey = Convert.ToBase64String(rsa.ExportPkcs8PrivateKey());
         string publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
 
-        byte[] signature = AuthEngineSignatureHelper.Sign(signClass, privateKey);
+        byte[] signature = EntitlementSigningService.Sign(signClass, privateKey);
         signClass.Signature = signature;
 
         // simulate response from api
@@ -39,7 +39,7 @@ public class Test_Signatures
         byte[] retrievedSignature = signClass.Signature;
         signClass.Signature = [];
 
-        Is.True.Equals(AuthEngineSignatureHelper.Verify(signClass, retrievedSignature, publicKey));
+        Is.True.Equals(EntitlementSigningService.Verify(signClass, retrievedSignature, publicKey));
     }
 
     [Test]
@@ -57,7 +57,7 @@ public class Test_Signatures
         string privateKey = Convert.ToBase64String(rsa.ExportPkcs8PrivateKey());
         string publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
 
-        byte[] signature = AuthEngineSignatureHelper.Sign(signClass, privateKey);
+        byte[] signature = EntitlementSigningService.Sign(signClass, privateKey);
         signClass.Signature = signature;
 
         signClass.RandomId = Guid.NewGuid();
@@ -69,6 +69,6 @@ public class Test_Signatures
         byte[] retrievedSignature = signClass.Signature;
         signClass.Signature = [];
 
-        Is.False.Equals(AuthEngineSignatureHelper.Verify(signClass, retrievedSignature, publicKey));
+        Is.False.Equals(EntitlementSigningService.Verify(signClass, retrievedSignature, publicKey));
     }
 }
