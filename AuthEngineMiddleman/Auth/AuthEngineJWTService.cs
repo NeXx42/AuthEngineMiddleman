@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AuthEngineMiddleman.Auth;
 
-public class AuthEngineSigningService(string _authServiceUrl, string? _publicKey = null) : IDisposable
+public class AuthEngineJWTService(string _authServiceUrl, string? _publicKey = null) : IDisposable
 {
     private RSA? _rsa;
     private RsaSecurityKey? _key;
