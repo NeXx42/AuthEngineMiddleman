@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using AuthEngineShared;
 
@@ -5,6 +6,17 @@ namespace AuthEngineMiddleman.Auth;
 
 public static class AuthEngineJWTDecoder
 {
+    /// <summary>
+    /// doesn't validate the jwt
+    /// </summary>
+    /// <param name="jwtToken"></param>
+    /// <returns></returns>
+    public static UserObject? DecodePrincipal(string jwtToken)
+    {
+        JwtSecurityToken token = new JwtSecurityTokenHandler().ReadJwtToken(jwtToken);
+        return DecodePrincipal(new ClaimsPrincipal(new ClaimsIdentity(token.Claims, "jwt")));
+    }
+
     public static UserObject? DecodePrincipal(ClaimsPrincipal user)
     {
         string? userGuid = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
